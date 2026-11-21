@@ -7,6 +7,10 @@
       var open = menu.classList.toggle('open');
       btn.setAttribute('aria-expanded', open ? 'true' : 'false');
     });
+    var closeMenu = function () { if (menu.classList.contains('open')) { menu.classList.remove('open'); btn.setAttribute('aria-expanded', 'false'); } };
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeMenu(); } });
+    document.addEventListener('click', function (e) { if (!menu.contains(e.target) && !btn.contains(e.target)) closeMenu(); });
+    window.addEventListener('resize', function () { if (window.innerWidth > 1060) closeMenu(); });
   }
 
   // "View me as" lens on the home page
@@ -35,9 +39,12 @@
       b.addEventListener('click', function () {
         buttons.forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
         var f = b.dataset.filter;
+        var shown = 0;
         target.querySelectorAll('[data-group]').forEach(function (item) {
           item.hidden = !(f === 'All' || item.dataset.group === f);
+          if (!item.hidden) shown++;
         });
+        target.setAttribute('aria-label', shown + ' shown');
       });
     });
   });
@@ -63,6 +70,12 @@
     if (meta) meta.setAttribute('content', t === 'light' ? '#F7F4EE' : '#0D0F12');
   }
   apply(root.getAttribute('data-theme') === 'light' ? 'light' : 'dark');
+  // Follow the device setting live, until the visitor picks a mode themselves
+  try {
+    var mq = window.matchMedia('(prefers-color-scheme: light)');
+    var onChange = function (e) { var saved = null; try { saved = localStorage.getItem('theme'); } catch (x) {} if (!saved) apply(e.matches ? 'light' : 'dark'); };
+    if (mq.addEventListener) mq.addEventListener('change', onChange); else if (mq.addListener) mq.addListener(onChange);
+  } catch (e) {}
   if (btn) btn.addEventListener('click', function () {
     var t = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
     apply(t);

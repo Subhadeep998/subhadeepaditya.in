@@ -29,8 +29,10 @@ def layout(fname, title, desc, body):
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://www.subhadeepaditya.in/assets/og.png">
 <meta name="theme-color" content="#0D0F12">
-<script>try{{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);}}catch(e){{}}</script>
+<script>try{{var t=localStorage.getItem("theme");if(t!=="light"&&t!=="dark")t=(window.matchMedia&&matchMedia("(prefers-color-scheme: light)").matches)?"light":"dark";document.documentElement.setAttribute("data-theme",t);}}catch(e){{}}</script>
 <link rel="icon" href="assets/favicon.png">
+<link rel="apple-touch-icon" href="assets/favicon.png">
+<link rel="canonical" href="https://www.subhadeepaditya.in/{"" if fname=="index.html" else fname}">{"<base href=\"/\">" if fname=="404.html" else ""}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&family=Cinzel:wght@600;800&display=swap" rel="stylesheet">
@@ -318,7 +320,7 @@ strands = [('i.', 'SCIENCE', 'The Scientist', 'M.Sc. and B.Sc. (Hons.) in Biotec
            ('iii.', 'STORIES', 'The Author', 'Three books spanning healthcare consulting, mythic fiction and the science of Alzheimer’s.', 'books.html', 'Books'),
            ('iv.', 'LAW', 'The Legal Mind', 'LL.B. at Techno India University — healthcare law, IP and AI governance.', 'legal.html', 'Legal analysis')]
 strand_html = ''.join(f'<a class="card" href="{h}"><div style="display:flex;justify-content:space-between;align-items:center"><span class="num">{n}</span><span class="kicker">{t}</span></div><h3 class="h-card">{ti}</h3><p>{d}</p><span class="foot">{lk} →</span></a>' for n, t, ti, d, h, lk in strands)
-home_books = ''.join(f'<a class="card flat" href="books.html#{k}" style="background:#F3EFE6;color:#0D0F12;border-color:rgba(13,15,18,.1);align-items:center;gap:20px"><div class="shelf" style="height:330px;width:100%;transform:scale(.82)">{book_cover(k)}</div><b style="font-size:19px;text-align:center;line-height:1.25">{t}</b></a>'
+home_books = ''.join(f'<a class="card flat" href="books.html#{k}" style="align-items:center;gap:20px"><div class="shelf" style="height:330px;width:100%;transform:scale(.82)">{book_cover(k)}</div><b style="font-size:19px;text-align:center;line-height:1.25">{t}</b></a>'
                      for k, t in [('hc', 'Healthcare Consulting, Vol. I'), ('varah', 'The Varah Files'), ('memory', 'When Memory Fades')])
 pages['index.html'] = ('Subhadeep Aditya — Where genomes meet governance',
   'Subhadeep Aditya: biotechnologist, healthcare data analyst, author, researcher and LL.B. student in Kolkata. tech.health.law',
@@ -394,10 +396,10 @@ bk = [('hc', 'NON-FICTION · PRACTITIONER HANDBOOK', 'Healthcare Consulting', 'F
         'It connects with my research on next-generation Alzheimer’s diagnostics and treatment.'],
        ['Alzheimer’s', 'Neuroscience', 'Public health', 'Kindle eBook'])]
 book_rows = ''.join(f'''<article class="book-row" id="{k}"><div class="shelf">{book_cover(k)}</div>
-<div class="info"><span class="kicker">{tag}</span><h2 class="h-sec" style="font-size:clamp(34px,4vw,56px)">{t}</h2><p style="font-size:19px;color:#3B4048">{sub}</p>
+<div class="info"><span class="kicker">{tag}</span><h2 class="h-sec" style="font-size:clamp(34px,4vw,56px)">{t}</h2><p style="font-size:19px;color:var(--muted)">{sub}</p>
 <div class="prose">{''.join(f"<p>{p}</p>" for p in ps)}</div>
 <div class="facts">{''.join(f"<span>{f}</span>" for f in facts)}</div>
-<div class="btns"><a class="btn btn-ink" href="{BOOKS[k]}">Read on Kindle {OUT_ARROW}</a></div></div></article>''' for k, tag, t, sub, ps, facts in bk)
+<div class="btns"><a class="btn btn-red" href="{BOOKS[k]}">Read on Kindle {OUT_ARROW}</a></div></div></article>''' for k, tag, t, sub, ps, facts in bk)
 pages['books.html'] = ('Books — Subhadeep Aditya', 'Three books by Subhadeep Aditya: Healthcare Consulting (Vol. I), The Varah Files, and When Memory Fades. Available on Amazon Kindle.',
   page_hero('Books', 'The bookshelf', 'Three books. <span class="it red">Three</span> worlds.', 'A practitioner’s handbook, a mythic techno-thriller and a journey through Alzheimer’s disease — all on Amazon Kindle.') +
   f'<section class="light" style="margin-top:48px;padding:40px 0 80px"><div class="wrap">{book_rows}</div></section>' + cta('Read one? <span class="it red">Tell me.</span>'))
@@ -526,6 +528,14 @@ pages['404.html'] = ('Page not found — Subhadeep Aditya', 'Page not found.',
   page_hero('404', 'Error 404', 'This page has <span class="it red">faded.</span>', 'The page you were looking for isn’t here. Try the home page instead.',
             f'<div class="btns"><a class="btn btn-red" href="index.html">Back to home {ARROW}</a></div>'))
 
+import re as _re
+def _ext(m):
+    tag = m.group(0)
+    href = _re.search(r'href="([^"]*)"', tag).group(1)
+    if 'target=' in tag or _re.match(r'https?://(www\.)?subhadeepaditya\.in', href): return tag
+    return tag[:-1] + ' target="_blank" rel="noopener">'
 for fname, (title, desc, body) in pages.items():
-    open(f'{OUT}/{fname}', 'w').write(layout(fname, title, desc, body))
+    html = layout(fname, title, desc, body)
+    html = _re.sub(r'<a\b[^>]*href="https?://[^"]*"[^>]*>', _ext, html)
+    open(f'{OUT}/{fname}', 'w').write(html)
 print('pages:', ', '.join(pages))
