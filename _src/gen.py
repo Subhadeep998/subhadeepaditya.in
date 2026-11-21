@@ -29,6 +29,7 @@ def layout(fname, title, desc, body):
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://www.subhadeepaditya.in/assets/og.png">
 <meta name="theme-color" content="#0D0F12">
+<script>try{{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);}}catch(e){{}}</script>
 <link rel="icon" href="assets/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -39,16 +40,19 @@ def layout(fname, title, desc, body):
 <a class="skip" href="#main">Skip to content</a>
 <header class="site-head">
 <div class="wrap" style="position:relative">
-<a class="brand" href="index.html"><img src="assets/logo-dark.png" alt="SAditya logo" width="62" height="50"><span><b>Subhadeep Aditya</b><small>tech.health.law</small></span></a>
-<button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu" aria-label="Open menu"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+<a class="brand" href="index.html"><img class="logo-d" src="assets/logo-dark.png" alt="SAditya logo" width="62" height="50"><img class="logo-l" src="assets/logo-light.png" alt="SAditya logo" width="62" height="50"><span><b>Subhadeep Aditya</b><small>tech.health.law</small></span></a>
 <nav aria-label="Main"><ul class="menu" id="menu">{items}</ul></nav>
+<div class="head-ctrls">
+<button class="theme-btn" type="button" aria-label="Switch to light mode" title="Switch to light mode"><svg class="i-sun" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg><svg class="i-moon" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z"/></svg><span class="theme-label">Light</span></button>
+<button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu" aria-label="Open menu"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+</div>
 </div>
 </header>
 <main id="main">
 {body}
 </main>
 <footer class="site-foot">
-<div class="logo"><img src="assets/logo-dark.png" alt="SAditya — tech.health.law"></div>
+<div class="logo"><img class="logo-d" src="assets/logo-dark.png" alt="SAditya — tech.health.law"><img class="logo-l" src="assets/logo-light.png" alt="SAditya — tech.health.law"></div>
 <div aria-hidden="true" class="big outline">Subhadeep Aditya</div>
 <div class="wrap foot-grid">
 <nav aria-label="Footer">{foot}</nav>
@@ -213,7 +217,7 @@ def helix():
         p = i * 0.5; s = math.sin(p); c = math.cos(p); y = 12 + i * 22
         ax = 160 + 120 * s; bx = 160 - 120 * s; hot = i % 4 == 1
         ad = 9 + 4 * c; bd = 9 - 4 * c
-        col = 'var(--accent)' if hot else 'rgba(243,239,230,.22)'
+        col = 'var(--accent)' if hot else 'var(--line-2)'
         out.append(f'<i style="left:{min(ax, bx):.1f}px;top:{y - 1 if hot else y}px;width:{max(2, abs(ax - bx)):.1f}px;height:{4 if hot else 2}px;background:{col};border-radius:2px"></i>')
         out.append(f'<i style="left:{ax - ad / 2:.1f}px;top:{y + 1 - ad / 2:.1f}px;width:{ad:.1f}px;height:{ad:.1f}px;border-radius:50%;background:var(--paper);opacity:{0.45 + 0.5 * (c + 1) / 2:.2f}"></i>')
         out.append(f'<i style="left:{bx - bd / 2:.1f}px;top:{y + 1 - bd / 2:.1f}px;width:{bd:.1f}px;height:{bd:.1f}px;border-radius:50%;background:var(--accent);opacity:{0.45 + 0.5 * (1 - c) / 2:.2f}"></i>')
@@ -314,7 +318,7 @@ strands = [('i.', 'SCIENCE', 'The Scientist', 'M.Sc. and B.Sc. (Hons.) in Biotec
            ('iii.', 'STORIES', 'The Author', 'Three books spanning healthcare consulting, mythic fiction and the science of Alzheimer’s.', 'books.html', 'Books'),
            ('iv.', 'LAW', 'The Legal Mind', 'LL.B. at Techno India University — healthcare law, IP and AI governance.', 'legal.html', 'Legal analysis')]
 strand_html = ''.join(f'<a class="card" href="{h}"><div style="display:flex;justify-content:space-between;align-items:center"><span class="num">{n}</span><span class="kicker">{t}</span></div><h3 class="h-card">{ti}</h3><p>{d}</p><span class="foot">{lk} →</span></a>' for n, t, ti, d, h, lk in strands)
-home_books = ''.join(f'<a class="card flat" href="books.html#{k}" style="background:var(--paper);color:var(--ink);border-color:rgba(13,15,18,.1);align-items:center;gap:20px"><div class="shelf" style="height:330px;width:100%;transform:scale(.82)">{book_cover(k)}</div><b style="font-size:19px;text-align:center;line-height:1.25">{t}</b></a>'
+home_books = ''.join(f'<a class="card flat" href="books.html#{k}" style="background:#F3EFE6;color:#0D0F12;border-color:rgba(13,15,18,.1);align-items:center;gap:20px"><div class="shelf" style="height:330px;width:100%;transform:scale(.82)">{book_cover(k)}</div><b style="font-size:19px;text-align:center;line-height:1.25">{t}</b></a>'
                      for k, t in [('hc', 'Healthcare Consulting, Vol. I'), ('varah', 'The Varah Files'), ('memory', 'When Memory Fades')])
 pages['index.html'] = ('Subhadeep Aditya — Where genomes meet governance',
   'Subhadeep Aditya: biotechnologist, healthcare data analyst, author, researcher and LL.B. student in Kolkata. tech.health.law',

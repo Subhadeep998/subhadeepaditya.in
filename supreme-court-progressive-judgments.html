@@ -10,6 +10,7 @@
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://www.subhadeepaditya.in/assets/og.png">
 <meta name="theme-color" content="#0D0F12">
+<script>try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
 <link rel="icon" href="assets/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,9 +21,12 @@
 <a class="skip" href="#main">Skip to content</a>
 <header class="site-head">
 <div class="wrap" style="position:relative">
-<a class="brand" href="index.html"><img src="assets/logo-dark.png" alt="SAditya logo" width="62" height="50"><span><b>Subhadeep Aditya</b><small>tech.health.law</small></span></a>
-<button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu" aria-label="Open menu"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+<a class="brand" href="index.html"><img class="logo-d" src="assets/logo-dark.png" alt="SAditya logo" width="62" height="50"><img class="logo-l" src="assets/logo-light.png" alt="SAditya logo" width="62" height="50"><span><b>Subhadeep Aditya</b><small>tech.health.law</small></span></a>
 <nav aria-label="Main"><ul class="menu" id="menu"><li><a href="index.html">Home</a></li><li><a href="about.html">About</a></li><li><a href="books.html">Books</a></li><li><a href="research.html">Research</a></li><li><a href="legal.html">Legal</a></li><li><a href="credentials.html">Credentials</a></li><li><a href="ventures.html">Ventures</a></li><li><a href="contact.html">Contact</a></li></ul></nav>
+<div class="head-ctrls">
+<button class="theme-btn" type="button" aria-label="Switch to light mode" title="Switch to light mode"><svg class="i-sun" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg><svg class="i-moon" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z"/></svg><span class="theme-label">Light</span></button>
+<button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu" aria-label="Open menu"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+</div>
 </div>
 </header>
 <main id="main">
@@ -52,7 +56,7 @@
 </div></div></section>
 </main>
 <footer class="site-foot">
-<div class="logo"><img src="assets/logo-dark.png" alt="SAditya — tech.health.law"></div>
+<div class="logo"><img class="logo-d" src="assets/logo-dark.png" alt="SAditya — tech.health.law"><img class="logo-l" src="assets/logo-light.png" alt="SAditya — tech.health.law"></div>
 <div aria-hidden="true" class="big outline">Subhadeep Aditya</div>
 <div class="wrap foot-grid">
 <nav aria-label="Footer"><a href="index.html">Home</a><a href="about.html">About</a><a href="books.html">Books</a><a href="research.html">Research</a><a href="legal.html">Legal</a><a href="credentials.html">Credentials</a><a href="ventures.html">Ventures</a><a href="contact.html">Contact</a></nav>

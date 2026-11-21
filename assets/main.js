@@ -46,3 +46,26 @@
   var y = document.getElementById('year');
   if (y) y.textContent = new Date().getFullYear();
 })();
+
+// Dark / light mode toggle
+(function () {
+  var root = document.documentElement;
+  var btn = document.querySelector('.theme-btn');
+  var meta = document.querySelector('meta[name="theme-color"]');
+  function apply(t) {
+    root.setAttribute('data-theme', t);
+    var next = t === 'light' ? 'dark' : 'light';
+    if (btn) {
+      btn.setAttribute('aria-label', 'Switch to ' + next + ' mode');
+      btn.setAttribute('title', 'Switch to ' + next + ' mode');
+      var l = btn.querySelector('.theme-label'); if (l) l.textContent = next === 'light' ? 'Light' : 'Dark';
+    }
+    if (meta) meta.setAttribute('content', t === 'light' ? '#F7F4EE' : '#0D0F12');
+  }
+  apply(root.getAttribute('data-theme') === 'light' ? 'light' : 'dark');
+  if (btn) btn.addEventListener('click', function () {
+    var t = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    apply(t);
+    try { localStorage.setItem('theme', t); } catch (e) {}
+  });
+})();
