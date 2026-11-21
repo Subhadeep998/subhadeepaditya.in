@@ -58,6 +58,7 @@ def layout(fname, title, desc, body):
 <div aria-hidden="true" class="big outline">Subhadeep Aditya</div>
 <div class="wrap foot-grid">
 <nav aria-label="Footer">{foot}</nav>
+<nav aria-label="More"><a href="chobighor.html">ChobiGhor gallery</a></nav>
 <nav aria-label="Profiles"><a href="{LI}">LinkedIn</a><a href="{RG}">ResearchGate</a><a href="{GH}">GitHub</a><a href="mailto:info@subhadeepaditya.in">info@subhadeepaditya.in</a></nav>
 </div>
 <div class="wrap foot-small"><span>© <span id="year">2026</span> Subhadeep Aditya · Kolkata, India</span><span>Views on this site are personal and not legal advice.</span></div>
@@ -357,6 +358,11 @@ pages['index.html'] = ('Subhadeep Aditya — Where genomes meet governance',
 <div class="btns"><a class="btn btn-red" href="legal.html">Read all {len(ESSAYS)} essays {ARROW}</a></div></div>
 <div class="side" style="flex:1 1 440px"><div class="rows">{''.join(f'<a class="row" href="{x["slug"]}.html" style="padding:20px 0"><span class="t"><span class="kicker" style="color:var(--accent)">{e(x["cat"])} · {x["mins"]} min</span><b style="font-size:20px">{e(x["title"])}</b></span></a>' for x in ESSAYS[:4])}</div></div></div>
 </div></div></section>
+<section><div class="wrap">
+{sec_head('05 / ChobiGhor Studios', 'Kolkata, one <span class="it">frame</span> at a time.', 'Heritage photography — lanes, trams, old houses and everyday life.')}
+<div class="strip">{''.join(f'<a class="strip-ph" href="chobighor.html"><img src="assets/chobighor/{x}-sm.jpg" alt="ChobiGhor photograph" loading="lazy"></a>' for x in ['inside-the-tram','red-stairs','checkered-corridor','ma-kali'])}</div>
+<div class="btns" style="margin-top:24px"><a class="btn btn-ghost" href="chobighor.html">Open the gallery {ARROW}</a></div>
+</div></section>
 {cta()}''')
 
 # ---------------- ABOUT ----------------
@@ -480,9 +486,9 @@ pages['ventures.html'] = ('Ventures — NextLeap Advisory & ChobiGhor Studios', 
 <span class="kicker">FOUNDER · PHOTOGRAPHY &amp; ART</span>
 <h2 class="h-page" style="font-size:clamp(44px,6.4vw,96px)">ChobiGhor <span class="it red">Studios</span></h2>
 <p class="lede">Exploring Kolkata’s heritage through photography and art — the city’s lanes, facades and stories, one frame at a time.</p>
-<div class="grid g4">{''.join(f'<div style="aspect-ratio:4/5;border-radius:18px;border:1px dashed var(--line-2);display:flex;align-items:flex-end;padding:18px;background:repeating-linear-gradient(135deg,transparent 0 14px,rgba(243,239,230,.03) 14px 15px)"><span class="kicker">{t}</span></div>' for t in ['North Kolkata lanes', 'Colonial facades', 'Ghats of the Hooghly', 'Festival &amp; craft'])}</div>
-<p class="muted" style="font-size:15px">Gallery opening soon.</p>
-<div class="btns"><a class="btn btn-ghost" href="mailto:hello@subhadeepaditya.in?subject=ChobiGhor%20Studios">Say hello to ChobiGhor</a></div>
+<div class="strip">{''.join(f'<a class="strip-ph" href="chobighor.html"><img src="assets/chobighor/{x}-sm.jpg" alt="ChobiGhor photograph" loading="lazy"></a>' for x in ['the-courtyard','tram-238-monochrome','green-shutters-lane','his-masters-voice'])}</div>
+<p class="muted" style="font-size:14px">© ChobiGhor Studios · photographs by Subhadeep Aditya</p>
+<div class="btns"><a class="btn btn-red" href="chobighor.html">View the gallery {ARROW}</a><a class="btn btn-ghost" href="mailto:hello@subhadeepaditya.in?subject=ChobiGhor%20Studios">Say hello to ChobiGhor</a></div>
 </div></div></section>
 {cta()}''')
 
@@ -509,6 +515,33 @@ for n, x in enumerate(ESSAYS):
 </article>
 <section style="padding-top:48px"><div class="wrap" style="max-width:900px"><div class="grid g2">{pn}</div></div></section>
 {cta('Discuss this <span class="it red">essay.</span>')}''')
+
+
+# ---------------- CHOBIGHOR GALLERY ----------------
+import json as _json
+PHOTOS = _json.load(open('/home/claude/photos/meta.json'))
+PCATS = ['All'] + [c for c in ['Streets','Trams','Interiors','Objects','Street life','Devotion','Skyline'] if any(x['cat']==c for x in PHOTOS)]
+pfilters = ''.join(f'<button type="button" class="toggle" data-filter="{e(c)}" aria-pressed="{"true" if c == "All" else "false"}">{e(c)}<span class="n">{len(PHOTOS) if c == "All" else sum(1 for x in PHOTOS if x["cat"] == c)}</span></button>' for c in PCATS)
+ptiles = ''.join(f'<figure class="ph" data-group="{e(x["cat"])}"><button type="button" class="ph-open" data-i="{i}" aria-label="Open photo: {e(x["title"])}"><img src="assets/chobighor/{x["slug"]}-sm.jpg" width="{x["tw"]}" height="{x["th"]}" alt="{e(x["title"])} — {e(x["cap"])}" loading="lazy" decoding="async"></button><figcaption><b>{e(x["title"])}</b><span>{e(x["cat"])}</span></figcaption></figure>' for i, x in enumerate(PHOTOS))
+pdata = _json.dumps([dict(src=f'assets/chobighor/{x["slug"]}.jpg', t=x['title'], c=x['cap'], k=x['cat']) for x in PHOTOS], ensure_ascii=False).replace('</', '<\\/')
+pages['chobighor.html'] = ('ChobiGhor Studios — Kolkata heritage photography by Subhadeep Aditya',
+  'ChobiGhor Studios: photographs of Kolkata’s heritage — lanes, trams, old houses and everyday life — by Subhadeep Aditya.',
+  page_hero('<a href="ventures.html">Ventures</a> / ChobiGhor', 'ChobiGhor Studios · ছবিঘর', 'Kolkata, one <span class="it red">frame</span> at a time.',
+            'Lanes, trams, old houses and the small things that hold a city’s memory — photographed by Subhadeep Aditya.') + f'''
+<section style="padding-top:40px"><div class="wrap">
+<div class="chips" role="group" aria-label="Filter photographs" data-filter-group="gallery" style="margin-bottom:28px">{pfilters}</div>
+<div class="gallery" id="gallery">{ptiles}</div>
+<p class="note" style="margin-top:40px"><b>© 2026 ChobiGhor Studios · Subhadeep Aditya. All rights reserved.</b> Every photograph on this page was taken by Subhadeep Aditya. Please don’t download, reuse or republish them without written permission — write to <a href="mailto:hello@subhadeepaditya.in?subject=ChobiGhor%20photo%20permission">hello@subhadeepaditya.in</a> for licensing or prints.</p>
+</div></section>
+<dialog class="lb" id="lb" aria-label="Photo viewer">
+<div class="lb-inner">
+<img id="lb-img" alt="">
+<div class="lb-bar"><div class="lb-text"><b id="lb-title"></b><span id="lb-cap"></span><small>© ChobiGhor Studios · Subhadeep Aditya</small></div>
+<div class="lb-ctrls"><button type="button" class="lb-btn" id="lb-prev" aria-label="Previous photo">←</button><span id="lb-count" class="kicker"></span><button type="button" class="lb-btn" id="lb-next" aria-label="Next photo">→</button><button type="button" class="lb-btn" id="lb-close" aria-label="Close viewer">✕</button></div></div>
+</div>
+</dialog>
+<script>window.CHOBI={pdata};</script>
+{cta('Prints &amp; <span class="it red">collaborations.</span>')}''')
 
 # ---------------- CONTACT ----------------
 pages['contact.html'] = ('Contact — Subhadeep Aditya', 'Contact Subhadeep Aditya for research collaboration, legal internships, consulting, books and photography.',

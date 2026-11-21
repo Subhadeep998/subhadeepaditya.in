@@ -82,3 +82,33 @@
     try { localStorage.setItem('theme', t); } catch (e) {}
   });
 })();
+
+// ChobiGhor lightbox
+(function () {
+  var data = window.CHOBI, lb = document.getElementById('lb');
+  if (!data || !lb) return;
+  var img = document.getElementById('lb-img'), title = document.getElementById('lb-title'),
+      cap = document.getElementById('lb-cap'), count = document.getElementById('lb-count'), i = 0, opener = null;
+  function visible() { return [].slice.call(document.querySelectorAll('.ph')).filter(function (f) { return !f.hidden; }).map(function (f) { return +f.querySelector('.ph-open').dataset.i; }); }
+  function show(n) {
+    var v = visible(); if (!v.length) return;
+    var pos = v.indexOf(n); if (pos < 0) pos = 0; i = v[pos];
+    var d = data[i]; img.src = d.src; img.alt = d.t + ' — ' + d.c; title.textContent = d.t; cap.textContent = d.c;
+    count.textContent = (pos + 1) + ' / ' + v.length;
+  }
+  function step(k) { var v = visible(), pos = v.indexOf(i); show(v[(pos + k + v.length) % v.length]); }
+  document.querySelectorAll('.ph-open').forEach(function (b) {
+    b.addEventListener('click', function () { opener = b; show(+b.dataset.i); if (lb.showModal) lb.showModal(); else lb.setAttribute('open', ''); });
+  });
+  document.getElementById('lb-prev').addEventListener('click', function () { step(-1); });
+  document.getElementById('lb-next').addEventListener('click', function () { step(1); });
+  document.getElementById('lb-close').addEventListener('click', function () { lb.close(); });
+  lb.addEventListener('close', function () { if (opener) opener.focus(); });
+  lb.addEventListener('keydown', function (e) { if (e.key === 'ArrowRight') step(1); if (e.key === 'ArrowLeft') step(-1); });
+  lb.addEventListener('click', function (e) { if (e.target === lb || e.target.classList.contains('lb-inner')) lb.close(); });
+  var x0 = null;
+  lb.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; }, { passive: true });
+  lb.addEventListener('touchend', function (e) { if (x0 === null) return; var dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 50) step(dx < 0 ? 1 : -1); x0 = null; });
+  // discourage casual saving of copyrighted photos
+  document.querySelectorAll('.ph img, #lb-img, .strip-ph img').forEach(function (el) { el.addEventListener('contextmenu', function (e) { e.preventDefault(); }); el.setAttribute('draggable', 'false'); });
+})();
