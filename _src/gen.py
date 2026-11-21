@@ -242,6 +242,68 @@ def stats():
     return f'''<div class="stats"><div><b>3</b><span>books on Amazon Kindle</span></div><div><b>4</b><span>research publications</span></div><div><b>3+</b><span>years in healthcare intelligence</span></div><div><b>{len(CREDS)}</b><span>certifications, from Oxford Law to WHO</span></div></div>'''
 
 
+
+# ---------------- ESSAYS ----------------
+ESSAY_META = [
+    ('The Ayodhya Verdict (2019)', 'ayodhya-verdict', 'Constitutional law'),
+    ('Decriminalisation of Adultery', 'decriminalisation-of-adultery', 'Constitutional law'),
+    ('Recognition of Digital Privacy in India', 'digital-privacy-india', 'Privacy & technology'),
+    ('The Supreme Court\'s Contemporary Constitutional Jurisprudence', 'supreme-court-progressive-judgments', 'Constitutional law'),
+    ('Justice Beyond Judgments', 'ipr-justice-beyond-judgments', 'Intellectual property'),
+    ('The Sanctity of the Robes', 'legal-advertising-india', 'Legal profession'),
+]
+H2S = {'The Statutory Framework: Rule 36', 'The Jurisprudential Rationale: Why the Embargo?', 'The 2008 Amendment: A Cautious Relaxation', 'Penalties for Contravention'}
+def load_essays():
+    raw = [l.strip() for l in open('/home/claude/site2/essays.txt', encoding='utf-8').read().split('\n')]
+    lines = [l for l in raw if l]
+    starts = []
+    for i, l in enumerate(lines):
+        for k, (prefix, slug, cat) in enumerate(ESSAY_META):
+            if l.startswith(prefix) and len(l) < 160 and not any(st[1] == k for st in starts):
+                starts.append((i, k))
+    starts.sort()
+    essays = []
+    for n, (i, k) in enumerate(starts):
+        end = starts[n + 1][0] if n + 1 < len(starts) else len(lines)
+        title = lines[i]
+        body = lines[i + 1:end]
+        blocks = []; j = 0
+        while j < len(body):
+            l = body[j]
+            if l in H2S:
+                blocks.append(('h2', l)); j += 1; continue
+            if l.endswith(':') and j + 1 < len(body):
+                blocks.append(('p', l)); j += 1; items = []
+                while j < len(body) and body[j] not in H2S and (len(body[j]) < 120 or body[j].startswith('Removal from the State Roll')):
+                    items.append(body[j]); j += 1
+                blocks.append(('ul', items)); continue
+            if l.endswith('Joshi v. Union of India'):
+                l += '.'
+            blocks.append(('p', l)); j += 1
+        words = sum(len((b[1] if isinstance(b[1], str) else ' '.join(b[1])).split()) for b in blocks)
+        first = next(b[1] for b in blocks if b[0] == 'p')
+        ex = ' '.join(first.split()[:34]).rstrip(',.;:') + '…'
+        prefix, slug, cat = ESSAY_META[k]
+        essays.append(dict(title=title, slug=slug, cat=cat, blocks=blocks, mins=max(1, round(words / 200)), excerpt=ex))
+    return essays
+ESSAYS = load_essays()
+assert len(ESSAYS) == 6, [x['title'] for x in ESSAYS]
+
+def inline(t):
+    t = e(t)
+    if ':' in t[:48] and not t.startswith(('The ', 'A ', 'In ', 'This ')):
+        lead, rest = t.split(':', 1)
+        return f'<b>{lead}:</b>{rest}'
+    return t
+
+def render_blocks(blocks):
+    out = []
+    for kind, v in blocks:
+        if kind == 'h2': out.append(f'<h2>{e(v)}</h2>')
+        elif kind == 'ul': out.append('<ul>' + ''.join(f'<li>{inline(x)}</li>' for x in v) + '</ul>')
+        else: out.append(f'<p>{inline(v)}</p>')
+    return '\n'.join(out)
+
 pages = {}
 
 # ---------------- HOME ----------------
@@ -285,9 +347,9 @@ pages['index.html'] = ('Subhadeep Aditya — Where genomes meet governance',
 </div></section>
 <section><div class="wrap"><div class="split" style="align-items:center">
 <div class="main" style="display:flex;flex-direction:column;gap:20px"><p class="eyebrow">04 / Legal analysis &amp; opinions</p><h2 class="h-sec">A scientist’s eye on <span class="it red">the law.</span></h2>
-<p class="lede">Notes on healthcare law, intellectual property and AI governance in India — written from the bench of a biotech lab and the desk of a law student.</p>
-<div class="btns"><a class="btn btn-red" href="legal.html">Go to Legal {ARROW}</a></div></div>
-<div class="side"><div class="grid" style="gap:10px">{''.join(f'<div class="card" style="padding:20px;flex-direction:row;align-items:center;gap:14px"><span class="num" style="font-size:34px">{n}</span><b style="font-size:18px">{t}</b></div>' for n, t in [('§1', 'Healthcare &amp; medical law'), ('§2', 'Intellectual property &amp; biotech'), ('§3', 'AI, justice &amp; the rule of law'), ('§4', 'Data protection &amp; tech regulation')])}</div></div>
+<p class="lede">Essays on the Constitution, privacy, intellectual property and the legal profession — written from the bench of a biotech lab and the desk of a law student.</p>
+<div class="btns"><a class="btn btn-red" href="legal.html">Read all {len(ESSAYS)} essays {ARROW}</a></div></div>
+<div class="side" style="flex:1 1 440px"><div class="rows">{''.join(f'<a class="row" href="{x["slug"]}.html" style="padding:20px 0"><span class="t"><span class="kicker" style="color:var(--accent)">{e(x["cat"])} · {x["mins"]} min</span><b style="font-size:20px">{e(x["title"])}</b></span></a>' for x in ESSAYS[:4])}</div></div></div>
 </div></div></section>
 {cta()}''')
 
@@ -351,6 +413,11 @@ pages['research.html'] = ('Research — Subhadeep Aditya', 'Publications and res
 {cta('Collaborate on <span class="it red">research.</span>')}''')
 
 # ---------------- LEGAL ----------------
+
+ecats = ['All'] + sorted({x['cat'] for x in ESSAYS}, key=lambda c: ['Constitutional law', 'Privacy & technology', 'Intellectual property', 'Legal profession'].index(c))
+efilters = ''.join(f'<button type="button" class="toggle" data-filter="{e(c)}" aria-pressed="{"true" if c == "All" else "false"}">{e(c)}<span class="n">{len(ESSAYS) if c == "All" else sum(1 for x in ESSAYS if x["cat"] == c)}</span></button>' for c in ecats)
+ecards = ''.join(f'<a class="card essay-card" data-group="{e(x["cat"])}" href="{x["slug"]}.html"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap"><span class="kicker" style="color:var(--accent)">{e(x["cat"])}</span><span class="kicker">{x["mins"]} min read</span></div><h3 class="h-card" style="font-size:clamp(21px,2.1vw,26px)">{e(x["title"])}</h3><p>{e(x["excerpt"])}</p><span class="foot">Read the essay →</span></a>' for x in ESSAYS)
+essay_list = f'<div class="chips" role="group" aria-label="Filter essays" data-filter-group="essays" style="margin-bottom:8px">{efilters}</div><div class="grid" id="essays" style="grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px">{ecards}</div>'
 focus = [('§1', 'Healthcare &amp; medical law', 'Medical negligence, patient rights, clinical trials, drug and device regulation in India — grounded in Manupatra’s Fundamentals of Medical Laws in India.'),
          ('§2', 'Intellectual property &amp; biotechnology', 'Patents on genes, diagnostics and biologics; trade secrets in health data; how IP shapes access to medicine.'),
          ('§3', 'AI, justice &amp; the rule of law', 'Accountability, bias and due process when algorithms make or inform decisions — building on Oxford’s AI, Justice and Rule of Law.'),
@@ -360,15 +427,12 @@ pages['legal.html'] = ('Legal Analysis & Opinions — Subhadeep Aditya', 'Legal 
   page_hero('Legal', 'Legal analysis &amp; opinions', 'A scientist’s eye on <span class="it red">the law.</span>',
             'Analysis of healthcare law, intellectual property and AI governance — from someone who has worked inside biotech labs and health-data teams, and now studies the law that governs them.') + f'''
 <section><div class="wrap">{sec_head('Focus areas', 'Where I write.')}<div class="grid g4">{focus_html}</div></div></section>
-<section><div class="wrap"><div class="split">
+<section><div class="wrap"><div class="split" style="flex-direction:column">
 <div class="main" style="display:flex;flex-direction:column;gap:20px">
-{sec_head('Analysis &amp; opinions', 'The casebook.')}
-<div class="card" style="padding:40px;align-items:flex-start;gap:18px"><span class="pill" style="color:var(--accent);border-color:var(--accent)">First pieces in preparation</span>
-<h3 class="h-card" style="font-size:30px">Case notes, statute explainers and opinion essays — coming soon.</h3>
-<p>Each piece will take one question at the edge of science and law, set out the legal position in India, compare it with other jurisdictions where useful, and give a reasoned view.</p>
-<div class="btns"><a class="btn btn-red" href="mailto:legal@subhadeepaditya.in?subject=Notify%20me%20of%20new%20legal%20analysis">Notify me by email</a><a class="btn btn-ghost" href="{LI}">Follow on LinkedIn {OUT_ARROW}</a></div></div>
+{sec_head('Analysis &amp; opinions', 'The casebook.', f'{len(ESSAYS)} essays on the Constitution, privacy, intellectual property and the legal profession.')}
+{essay_list}</div>
 </div>
-<div class="side" style="display:flex;flex-direction:column;gap:16px;padding-top:8px">
+<div class="side grid g2" style="gap:16px">
 <div class="card"><p class="kicker">Grounding</p>
 <p><b style="color:var(--paper)">LL.B.</b> — Techno India University, Kolkata</p>
 <p><b style="color:var(--paper)">AI, Justice and Rule of Law</b> — Faculty of Law, University of Oxford (2026)</p>
@@ -415,6 +479,30 @@ pages['ventures.html'] = ('Ventures — NextLeap Advisory & ChobiGhor Studios', 
 <div class="btns"><a class="btn btn-ghost" href="mailto:hello@subhadeepaditya.in?subject=ChobiGhor%20Studios">Say hello to ChobiGhor</a></div>
 </div></div></section>
 {cta()}''')
+
+
+# ---------------- ARTICLES ----------------
+for n, x in enumerate(ESSAYS):
+    prev = ESSAYS[n - 1] if n > 0 else None
+    nxt = ESSAYS[n + 1] if n + 1 < len(ESSAYS) else None
+    pn = ''
+    if prev: pn += f'<a class="card" href="{prev["slug"]}.html"><span class="kicker">← Previous</span><b style="font-size:19px;line-height:1.3">{e(prev["title"])}</b></a>'
+    else: pn += '<span></span>'
+    if nxt: pn += f'<a class="card" href="{nxt["slug"]}.html" style="text-align:right"><span class="kicker">Next →</span><b style="font-size:19px;line-height:1.3">{e(nxt["title"])}</b></a>'
+    first_p = next(b[1] for b in x['blocks'] if b[0] == 'p')
+    pages[x['slug'] + '.html'] = (f'{x["title"]} — Subhadeep Aditya', ' '.join(first_p.split()[:30]) + '…', f'''<div class="page-hero dots"><div class="wrap" style="max-width:900px">
+<p class="crumbs"><a href="index.html">Home</a> / <a href="legal.html">Legal</a> / {e(x["cat"])}</p>
+<div style="display:flex;flex-wrap:wrap;gap:10px"><span class="pill" style="color:var(--accent);border-color:var(--accent)">{e(x["cat"])}</span><span class="pill">{x["mins"]} min read</span><span class="pill">Essay</span></div>
+<h1 class="h-page" style="font-size:clamp(36px,5vw,68px);letter-spacing:-1.5px;line-height:1.02">{e(x["title"])}</h1>
+<div class="byline"><img src="assets/favicon.png" alt="" width="44" height="44"><span><b>Subhadeep Aditya</b><small>LL.B. student · Techno India University, Kolkata</small></span></div>
+</div></div>
+<article class="article wrap">
+{render_blocks(x["blocks"])}
+<div class="note" style="margin-top:48px"><b>Disclaimer.</b> This essay is academic analysis and personal opinion written by a law student. It is not legal advice.</div>
+<div class="share"><span class="kicker">Share</span><a class="btn btn-ghost" href="https://www.linkedin.com/sharing/share-offsite/?url=https://www.subhadeepaditya.in/{x["slug"]}.html">LinkedIn {OUT_ARROW}</a><a class="btn btn-ghost" href="mailto:?subject={e(x["title"])}&amp;body=https://www.subhadeepaditya.in/{x["slug"]}.html">Email</a><a class="btn btn-ghost" href="legal.html">All essays</a></div>
+</article>
+<section style="padding-top:48px"><div class="wrap" style="max-width:900px"><div class="grid g2">{pn}</div></div></section>
+{cta('Discuss this <span class="it red">essay.</span>')}''')
 
 # ---------------- CONTACT ----------------
 pages['contact.html'] = ('Contact — Subhadeep Aditya', 'Contact Subhadeep Aditya for research collaboration, legal internships, consulting, books and photography.',

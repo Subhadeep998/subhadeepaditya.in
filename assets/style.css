@@ -205,3 +205,20 @@ a.row:hover{padding-left:14px;background:rgba(243,239,230,.04)}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 @media (max-width:520px){.helix{transform:scale(.82);transform-origin:top center;height:450px}.display{letter-spacing:-2px}}
+
+/* articles */
+.byline{display:flex;align-items:center;gap:12px;margin-top:4px}
+.byline img{width:44px;height:44px;border-radius:50%;border:1px solid var(--line-2)}
+.byline b{display:block;font-size:16px}
+.byline small{display:block;font-size:13px;color:var(--muted)}
+.article{max-width:900px;padding-top:40px;font-size:19px;line-height:1.8;color:var(--body)}
+.article>p,.article>ul,.article>h2,.article>.note,.article>.share{max-width:720px}
+.article>p+p{margin-top:22px}
+.article>p:first-child::first-letter{float:left;font-family:var(--serif);font-size:92px;line-height:.82;padding:8px 12px 0 0;color:var(--accent)}
+.article h2{font-size:clamp(26px,2.8vw,34px);color:var(--paper);letter-spacing:-.5px;margin:56px 0 18px;padding-top:24px;border-top:1px solid var(--line)}
+.article ul{margin:18px 0 22px;padding-left:0;list-style:none}
+.article ul li{position:relative;padding:10px 0 10px 28px;border-bottom:1px solid var(--line)}
+.article ul li::before{content:"§";position:absolute;left:0;color:var(--accent);font-family:var(--serif)}
+.article b{color:var(--paper)}
+.share{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:28px}
+.share .kicker{margin-right:6px}
