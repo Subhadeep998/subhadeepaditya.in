@@ -324,10 +324,10 @@ strand_html = ''.join(f'<a class="card" href="{h}"><div style="display:flex;just
 home_books = ''.join(f'<a class="card flat" href="books.html#{k}" style="align-items:center;gap:20px"><div class="shelf" style="height:330px;width:100%;transform:scale(.82)">{book_cover(k)}</div><b style="font-size:19px;text-align:center;line-height:1.25">{t}</b></a>'
                      for k, t in [('hc', 'Healthcare Consulting, Vol. I'), ('varah', 'The Varah Files'), ('memory', 'When Memory Fades')])
 pages['index.html'] = ('Subhadeep Aditya — Where genomes meet governance',
-  'Subhadeep Aditya: biotechnologist, healthcare data analyst, author, researcher and LL.B. student in Kolkata. tech.health.law',
+  'Subhadeep Aditya: biotechnologist, healthcare data analyst, author and researcher in Kolkata, working across healthcare, law and technology. tech.health.law',
   f'''<div class="hero dots"><div class="wrap">
 <div class="copy">
-<div class="now"><span class="blink"></span>Now: LL.B. student · ABA member · open to law-firm internships</div>
+<div class="now"><span class="blink"></span>Now: Healthcare law, IP &amp; AI governance · ABA member · Open to law-firm internships</div>
 <p class="it" style="font-size:clamp(24px,2.4vw,32px);color:var(--body)">Hi, I’m Subhadeep Aditya — <span style="font-family:var(--mono);font-style:normal;font-size:.6em;letter-spacing:1px;color:var(--accent)">tech.health.law</span></p>
 <h1 class="display">Where genomes <span class="it red">meet</span> <span class="outline">governance.</span></h1>
 <div style="display:flex;flex-direction:column;gap:14px"><p class="kicker">View me as</p><div class="chips" role="group" aria-label="Choose a lens">{lens}</div>
@@ -375,7 +375,7 @@ pages['about.html'] = ('About — Subhadeep Aditya', 'Background, experience, ed
 <div class="main prose"><p class="eyebrow" style="margin-bottom:20px">The short version</p>
 <p>I trained as a biotechnologist, researching genome stability in yeast and quorum sensing in <i>Vibrio cholerae</i>. I then spent three-plus years in healthcare intelligence — at GlobalData, Vatrix Healthcare and GHX — turning medical-device and market data into clear, decision-ready insight.</p>
 <p>Along the way I started writing: a practitioner’s handbook on healthcare consulting, a mythic techno-thriller set in modern India, and a book on Alzheimer’s disease. I founded NextLeap Advisory, an educational consulting platform, and ChobiGhor Studios, which explores Kolkata’s heritage through photography and art.</p>
-<p>Today I’m pursuing an LL.B. at Techno India University, because the hardest questions in genomics, health data and AI are increasingly legal ones. My focus is healthcare law, intellectual property and AI governance — and I’m open to law-firm internships.</p></div>
+<p>I am currently reading law at Techno India University, Kolkata, driven by the conviction that the most consequential questions in genomics, health data and artificial intelligence are, increasingly, legal ones. My work centres on healthcare law, intellectual property and AI governance, and I welcome internship opportunities with law firms and legal practices.</p></div>
 <div class="side"><div class="card"><p class="kicker">At a glance</p>
 <p><b style="color:var(--paper)">Based in</b><br>Kolkata, India</p><p><b style="color:var(--paper)">Studying</b><br>LL.B., Techno India University</p><p><b style="color:var(--paper)">Education</b><br>M.Sc. &amp; B.Sc. (Hons.) Biotechnology</p><p><b style="color:var(--paper)">Experience</b><br>3+ years, healthcare intelligence</p><p><b style="color:var(--paper)">Memberships</b><br>ABA · WSV · ASM · Microbiology Society</p>
 <a class="btn btn-red" href="contact.html" style="align-self:flex-start;margin-top:8px">Get in touch</a></div></div>
@@ -506,7 +506,7 @@ for n, x in enumerate(ESSAYS):
 <p class="crumbs"><a href="index.html">Home</a> / <a href="legal.html">Legal</a> / {e(x["cat"])}</p>
 <div style="display:flex;flex-wrap:wrap;gap:10px"><span class="pill" style="color:var(--accent);border-color:var(--accent)">{e(x["cat"])}</span><span class="pill">{x["mins"]} min read</span><span class="pill">Essay</span></div>
 <h1 class="h-page" style="font-size:clamp(36px,5vw,68px);letter-spacing:-1.5px;line-height:1.02">{e(x["title"])}</h1>
-<div class="byline"><img src="assets/favicon.png" alt="" width="44" height="44"><span><b>Subhadeep Aditya</b><small>LL.B. student · Techno India University, Kolkata</small></span></div>
+<div class="byline"><img src="assets/favicon.png" alt="" width="44" height="44"><span><b>Subhadeep Aditya</b><small>Legal researcher · LL.B., Techno India University</small></span></div>
 </div></div>
 <article class="article wrap">
 {render_blocks(x["blocks"])}
