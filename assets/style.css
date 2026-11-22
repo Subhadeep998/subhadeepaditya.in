@@ -291,7 +291,8 @@ html{transition:background-color .3s ease}
 .foot-soc{display:flex;flex-wrap:wrap;align-items:center;gap:14px 20px;padding-bottom:28px}
 .cta-soc{display:flex;flex-wrap:wrap;align-items:center;gap:14px 20px}
 .soc-h{font-family:var(--mono);font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:500;margin:8px 0 16px}
-.soc-grid{margin-bottom:40px;grid-template-columns:repeat(auto-fill,minmax(210px,1fr))!important}
+.soc-grid{margin-bottom:40px;grid-template-columns:repeat(auto-fill,minmax(min(300px,100%),1fr))!important}
 .soc-ic{width:44px;height:44px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--accent);margin-bottom:4px}
 .soc-ic svg{width:22px;height:22px}
 .soc-card:hover .soc-ic{background:var(--accent);color:#fff}
+.soc-card .kicker{overflow-wrap:anywhere}

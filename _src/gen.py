@@ -28,6 +28,7 @@ SOCIAL = [
  ('ResearchGate',RG,'simple/researchgate.svg','pro','Academic','Papers, posters and research projects.'),
  ('ORCID','https://orcid.org/0000-0002-8496-2850','simple/orcid.svg','pro','0000-0002-8496-2850','Verified researcher ID and publication record.'),
  ('Academia','https://nothing.academia.edu/SubhadeepAditya','simple/academia.svg','pro','Academia.edu','Papers and academic writing.'),
+ ('Figshare','https://figshare.com/authors/Subhadeep_Aditya/26495140','simple/figshare.svg','pro','Research data','Datasets, figures and research outputs.'),
  ('GitHub',GH,'simple/github.svg','pro','Code','This website and the NextLeap biology app.'),
 ]
 SOCIAL=[(n,u,_icon(i),g,k,d) for n,u,i,g,k,d in SOCIAL]
