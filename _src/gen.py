@@ -23,6 +23,7 @@ SOCIAL = [
  ('Threads','https://www.threads.com/@subhadeep.aditya','simple/threads.svg','follow','@subhadeep.aditya','Conversations and updates.'),
  ('Bluesky','https://bsky.app/profile/iamsubhadeepaditya.bsky.social','simple/bluesky.svg','follow','@iamsubhadeepaditya','Posts on research, law and AI.'),
  ('Facebook','https://www.facebook.com/profile.php?id=61592721825400','simple/facebook.svg','follow','Subhadeep Aditya','News, books and announcements.'),
+ ('Substack','https://subhadeep231759.substack.com/','simple/substack.svg','follow','tech.health.law','Newsletter on health law, AI governance and biotech.'),
  ('LinkedIn',LI,'fontawesome/brands/linkedin.svg','pro','Professional','Experience, certifications and updates.'),
  ('ResearchGate',RG,'simple/researchgate.svg','pro','Academic','Papers, posters and research projects.'),
  ('ORCID','https://orcid.org/0000-0002-8496-2850','simple/orcid.svg','pro','0000-0002-8496-2850','Verified researcher ID and publication record.'),
