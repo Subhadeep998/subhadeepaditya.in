@@ -10,6 +10,30 @@ OUT_ARROW = '<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="cur
 LI = 'https://www.linkedin.com/in/subhadeep-aditya-080970145/'
 RG = 'https://www.researchgate.net/profile/Subhadeep-Aditya'
 GH = 'https://github.com/Subhadeep998'
+
+import os as _os
+_IC='/usr/local/lib/python3.13/dist-packages/material/templates/.icons/'
+def _icon(path):
+    svg=open(_IC+path).read().strip()
+    return svg.replace('<svg ','<svg aria-hidden="true" focusable="false" fill="currentColor" ',1)
+# name, url, icon, group, kicker, description
+SOCIAL = [
+ ('Instagram','https://www.instagram.com/iamsubhadeepaditya/','simple/instagram.svg','follow','@iamsubhadeepaditya','Photography, ChobiGhor and everyday Kolkata.'),
+ ('X','https://x.com/AdityaSubhadeep','simple/x.svg','follow','@AdityaSubhadeep','Quick takes on health, law and technology.'),
+ ('Threads','https://www.threads.com/@subhadeep.aditya','simple/threads.svg','follow','@subhadeep.aditya','Conversations and updates.'),
+ ('Bluesky','https://bsky.app/profile/iamsubhadeepaditya.bsky.social','simple/bluesky.svg','follow','@iamsubhadeepaditya','Posts on research, law and AI.'),
+ ('Facebook','https://www.facebook.com/profile.php?id=61592721825400','simple/facebook.svg','follow','Subhadeep Aditya','News, books and announcements.'),
+ ('LinkedIn',LI,'fontawesome/brands/linkedin.svg','pro','Professional','Experience, certifications and updates.'),
+ ('ResearchGate',RG,'simple/researchgate.svg','pro','Academic','Papers, posters and research projects.'),
+ ('ORCID','https://orcid.org/0000-0002-8496-2850','simple/orcid.svg','pro','0000-0002-8496-2850','Verified researcher ID and publication record.'),
+ ('Academia','https://nothing.academia.edu/SubhadeepAditya','simple/academia.svg','pro','Academia.edu','Papers and academic writing.'),
+ ('GitHub',GH,'simple/github.svg','pro','Code','This website and the NextLeap biology app.'),
+]
+SOCIAL=[(n,u,_icon(i),g,k,d) for n,u,i,g,k,d in SOCIAL]
+def social_row(cls='soc'):
+    return f'<ul class="{cls}" aria-label="Follow Subhadeep Aditya">'+''.join(f'<li><a href="{u}" rel="me noopener" target="_blank" aria-label="{n}" title="{n}">{ic}</a></li>' for n,u,ic,g,k,d in SOCIAL)+'</ul>'
+def social_cards(group):
+    return ''.join(f'<a class="card soc-card" href="{u}" rel="me noopener" target="_blank"><span class="soc-ic">{ic}</span><span class="kicker">{k}</span><h3 class="h-card">{n}</h3><p>{d}</p><span class="foot">{"Follow" if g=="follow" else "Visit"} →</span></a>' for n,u,ic,g2,k,d in SOCIAL if g2==group for g in [g2])
 BOOKS = {'hc': 'https://www.amazon.in/dp/B0HD9SY43K', 'varah': 'https://www.amazon.in/dp/B0FL3S14H6', 'memory': 'https://www.amazon.in/dp/B0G4KL9H5B'}
 
 
@@ -59,8 +83,9 @@ def layout(fname, title, desc, body):
 <div class="wrap foot-grid">
 <nav aria-label="Footer">{foot}</nav>
 <nav aria-label="More"><a href="chobighor.html">ChobiGhor gallery</a></nav>
-<nav aria-label="Profiles"><a href="{LI}">LinkedIn</a><a href="{RG}">ResearchGate</a><a href="{GH}">GitHub</a><a href="mailto:info@subhadeepaditya.in">info@subhadeepaditya.in</a></nav>
+<nav aria-label="Email"><a href="mailto:info@subhadeepaditya.in">info@subhadeepaditya.in</a></nav>
 </div>
+<div class="wrap foot-soc"><span class="kicker">Follow</span>{social_row()}</div>
 <div class="wrap foot-small"><span>© <span id="year">2026</span> Subhadeep Aditya · Kolkata, India</span><span>Views on this site are personal and not legal advice.</span></div>
 </footer>
 <script src="assets/main.js"></script>
@@ -241,7 +266,7 @@ def cta(title_html='Let’s build something <span class="it red">worth regulatin
     return f'''<section><div class="wrap"><div class="big-cta dots">
 <div style="display:flex;flex-direction:column;gap:16px"><p class="eyebrow">Get in touch</p><h2 class="h-page" style="font-size:clamp(40px,6.2vw,92px)">{title_html}</h2></div>
 <div class="grid g4">{mails}</div>
-<div class="btns"><a class="btn btn-ghost" href="{LI}">LinkedIn {OUT_ARROW}</a><a class="btn btn-ghost" href="{RG}">ResearchGate {OUT_ARROW}</a><a class="btn btn-ghost" href="{GH}">GitHub {OUT_ARROW}</a></div>
+<div class="cta-soc"><span class="kicker">Follow along</span>{social_row()}</div>
 </div></div></section>'''
 
 
@@ -547,12 +572,11 @@ pages['chobighor.html'] = ('ChobiGhor Studios — Kolkata heritage photography b
 pages['contact.html'] = ('Contact — Subhadeep Aditya', 'Contact Subhadeep Aditya for research collaboration, legal internships, consulting, books and photography.',
   page_hero('Contact', 'Contact', 'Let’s <span class="it red">talk.</span>', 'Pick the address that fits — every message reaches me.') + f'''
 <section style="padding-top:48px"><div class="wrap"><div class="grid g4">{''.join(f'<a class="mail" href="mailto:{a}" style="min-height:180px"><span class="kicker">{l}</span><b style="font-size:19px">{a}</b><p>{d}</p></a>' for l, a, d in EMAILS)}</div></div></section>
-<section><div class="wrap">{sec_head('Elsewhere', 'Find me online.')}
-<div class="grid g3">
-<a class="card" href="{LI}"><span class="kicker">PROFESSIONAL</span><h3 class="h-card">LinkedIn</h3><p>Experience, certifications and updates.</p><span class="foot">Connect →</span></a>
-<a class="card" href="{RG}"><span class="kicker">ACADEMIC</span><h3 class="h-card">ResearchGate</h3><p>Papers, posters and research projects.</p><span class="foot">View papers →</span></a>
-<a class="card" href="{GH}"><span class="kicker">CODE</span><h3 class="h-card">GitHub</h3><p>This website and the NextLeap biology app.</p><span class="foot">View GitHub →</span></a>
-</div>
+<section><div class="wrap">{sec_head('Elsewhere', 'Follow me online.')}
+<h3 class="soc-h">Social</h3>
+<div class="grid g3 soc-grid">{social_cards('follow')}</div>
+<h3 class="soc-h">Professional &amp; academic</h3>
+<div class="grid g3 soc-grid">{social_cards('pro')}</div>
 <div class="note" style="margin-top:32px"><b>Based in Kolkata, India.</b> Open to law-firm internships, research collaborations and consulting engagements.</div>
 </div></section>''')
 

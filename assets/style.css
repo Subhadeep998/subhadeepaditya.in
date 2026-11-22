@@ -283,3 +283,15 @@ html{transition:background-color .3s ease}
 .lb-ctrls .kicker{color:#A3A9B4}
 .lb-btn{min-width:48px;min-height:48px;border-radius:999px;border:1px solid rgba(243,239,230,.3);background:transparent;color:#F3EFE6;font-size:20px;cursor:pointer}
 .lb-btn:hover{border-color:#F3EFE6}
+/* social */
+.soc{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:10px}
+.soc a{width:44px;height:44px;border-radius:50%;border:1px solid var(--line-2);display:inline-flex;align-items:center;justify-content:center;color:var(--soft);transition:color .2s,border-color .2s,background .2s,transform .2s}
+.soc a:hover,.soc a:focus-visible{color:var(--paper);border-color:var(--accent);background:color-mix(in srgb,var(--accent) 16%,transparent);transform:translateY(-2px)}
+.soc svg{width:18px;height:18px}
+.foot-soc{display:flex;flex-wrap:wrap;align-items:center;gap:14px 20px;padding-bottom:28px}
+.cta-soc{display:flex;flex-wrap:wrap;align-items:center;gap:14px 20px}
+.soc-h{font-family:var(--mono);font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:500;margin:8px 0 16px}
+.soc-grid{margin-bottom:40px;grid-template-columns:repeat(auto-fill,minmax(210px,1fr))!important}
+.soc-ic{width:44px;height:44px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--accent);margin-bottom:4px}
+.soc-ic svg{width:22px;height:22px}
+.soc-card:hover .soc-ic{background:var(--accent);color:#fff}
